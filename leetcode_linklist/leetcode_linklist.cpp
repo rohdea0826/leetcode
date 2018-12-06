@@ -110,6 +110,37 @@ public:
 	//回文链表
 	bool isPalindrome(ListNode* head) {
 		//要求时间复杂度O（n），空间复杂度O（1）  ？？？
+		//通过快慢指针找到中间节点，其间将前半部分逆置
+		//之后分别遍历两个链表依次判断
+		if (head == nullptr || head->next == nullptr) return true;
+		ListNode *left = nullptr;
+		ListNode *cur = left;
+		ListNode *fast = head;
+		ListNode *slow = head;
+		while (fast != nullptr)
+		{
+			if (fast->next != nullptr)
+				fast = fast->next->next;
+			else
+			{
+				//若链表节点数为奇数，将中间值跳过
+				slow = slow->next;
+				break;
+			}
+			cur = slow;
+			slow = slow->next;
+			cur->next = left;
+			left = cur;
+		}
+		while (left != nullptr)
+		{
+			if (slow == nullptr) return false;
+			if (left->val != slow->val) return false;
+			left = left->next;
+			slow = slow->next;
+		}
+		return true;
+
 	}
 	//环形链表
 	bool hasCycle(ListNode *head) {
@@ -131,16 +162,16 @@ public:
 int main()
 {
 	ListNode *head = &ListNode(1);
-	head->next = &ListNode(2);
-	head->next->next = &ListNode(3);
-	head->next->next->next = &ListNode(4);
+	head->next = &ListNode(0);
+	head->next->next = &ListNode(1);
+	head->next->next->next = &ListNode(1);
 	//head->next->next->next->next = head;
 	ListNode *list2 = &ListNode(2);
 	Solution x;
 	//ListNode *ret = x.removeNthFromEnd(head, 3);
 	//ListNode *ret = x.reverseList(head);
 	//ListNode *ret = x.mergeTwoLists(head, list2);
-	bool ret = x.hasCycle(head);
-
+	//bool ret = x.hasCycle(head);
+	bool ret = x.isPalindrome(head);
 	return 0;
 }
